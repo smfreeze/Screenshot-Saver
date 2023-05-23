@@ -1,0 +1,49 @@
+from PIL import Image
+import requests
+from io import BytesIO
+import string
+import random
+import os
+
+def get_image(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        image_bytes = BytesIO(response.content)
+        return image_bytes
+
+    else:
+        print(response.status_code)
+        return None
+
+
+def show_image(im, url):
+    img = Image.open(im)
+    if img.convert('RGB') != bad_img:
+        save_image(img, url)
+        print("saved image 1")
+        # img.show()
+
+    else:
+        pass
+        # print("Bad url")
+
+
+def save_image(img: Image, url):
+    path = '/random_screenshots/'
+    if not os.path.exists(os.getcwd()+path):
+        os.mkdir(os.getcwd()+path)
+    img.save(f"random_screenshots/{len(os.listdir(os.getcwd()+path))}-{url}.png")
+
+
+bad_url = 'https://i.imgur.com/nMaNt69.png'
+bad_img = Image.open(get_image(bad_url)).convert('RGB')
+
+
+strings = string.ascii_letters + string.digits
+while True:
+    unique = ''.join(random.choice(strings) for i in range(7))
+    url = f'https://i.imgur.com/{unique}.png'
+
+    image_bytes = get_image(url)
+    if image_bytes:
+        show_image(image_bytes, unique)
